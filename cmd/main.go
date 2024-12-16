@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/a-korkin/csvparser/tools"
+	"github.com/a-korkin/csvparser/internals/tools"
 )
 
 func main() {

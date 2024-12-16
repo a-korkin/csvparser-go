@@ -38,7 +38,7 @@ func DownloadFile(uri string) {
 		log.Fatalf("file is not csv")
 	}
 
-	fo, err := os.Create("data/ex.csv")
+	fo, err := os.Create("internals/data/ex.csv")
 	if err != nil {
 		log.Fatalf("failed to create file: %s", err)
 	}
