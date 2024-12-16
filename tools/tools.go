@@ -8,6 +8,27 @@ import (
 	"os"
 )
 
+func writeToFile(rw *bufio.ReadWriter) {
+	buf := make([]byte, 1024)
+	for {
+		n, err := rw.Reader.Read(buf)
+		if err != nil && err != io.EOF {
+			log.Fatalf("failed to read body: %s", err)
+		}
+		if n == 0 {
+			break
+		}
+		n, err = rw.Writer.Write(buf[:n])
+		if err != nil {
+			log.Fatalf("failed to write buf in file: %s", err)
+		}
+		err = rw.Writer.Flush()
+		if err != nil {
+			log.Fatalf("failed flush to file: %s", err)
+		}
+	}
+}
+
 func DownloadFile(uri string) {
 	resp, err := http.Get(uri)
 	if err != nil {
@@ -21,27 +42,6 @@ func DownloadFile(uri string) {
 	if err != nil {
 		log.Fatalf("failed to create file: %s", err)
 	}
-	writer := bufio.NewWriter(fo)
-
-	buf := make([]byte, 1024)
-	reader := bufio.NewReader(resp.Body)
-
-	for {
-		n, err := reader.Read(buf)
-		if err != nil && err != io.EOF {
-			log.Fatalf("failed to read body: %s", err)
-		}
-		if n == 0 {
-			break
-		}
-		n, err = writer.Write(buf[:n])
-		if err != nil {
-			log.Fatalf("failed to write buf in file: %s", err)
-		}
-		err = writer.Flush()
-		if err != nil {
-			log.Fatalf("failed flush to file: %s", err)
-		}
-		// log.Printf("writed %d bytes\n", n)
-	}
+	rw := bufio.NewReadWriter(bufio.NewReader(resp.Body), bufio.NewWriter(fo))
+	writeToFile(rw)
 }
