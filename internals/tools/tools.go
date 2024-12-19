@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 )
 
@@ -30,6 +31,14 @@ func writeToFile(rw *bufio.ReadWriter) {
 			log.Fatalf("failed flush to file: %s", err)
 		}
 	}
+}
+
+func PrepareDir(fileName string) string {
+	dirName := os.Getenv("DIR_NAME")
+	if err := os.Mkdir(dirName, os.ModePerm); err != nil {
+		log.Fatalf("failed to create directory: %s", err)
+	}
+	return filepath.Join(dirName, fileName)
 }
 
 func DownloadFile(uri string, fileName string) {
