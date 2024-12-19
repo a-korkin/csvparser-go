@@ -69,7 +69,7 @@ func DownloadFile(uri string, fileName string) {
 	writeToFile(rw)
 }
 
-func ParseFile(filePath string) {
+func ParseFile(fileName, filePath string) {
 	fi, err := os.Open(filePath)
 	if err != nil {
 		log.Fatalf("failed to open file: %s", err)
@@ -86,5 +86,10 @@ func ParseFile(filePath string) {
 	if err != nil {
 		log.Fatalf("failed to read from file: %s", err)
 	}
-	models.CreateSurveys(records)
+	switch fileName {
+	case "survey.csv":
+		models.CreateSurveys(records)
+	case "finance.csv":
+		models.CreateFinances(records)
+	}
 }
