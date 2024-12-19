@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"strconv"
 )
 
 func writeToFile(rw *bufio.ReadWriter) {
@@ -87,25 +86,5 @@ func ParseFile(filePath string) {
 	if err != nil {
 		log.Fatalf("failed to read from file: %s", err)
 	}
-	surveys := make([]models.Survey, 0)
-	for i, record := range records {
-		if i == 0 {
-			continue
-		}
-		year, err := strconv.Atoi(record[0])
-		if err != nil {
-			log.Fatalf("failed to convert str to year: %s", err)
-		}
-		survey := models.Survey{
-			Year:     uint16(year),
-			Code:     record[1],
-			Name:     record[2],
-			RMESize:  record[3],
-			Variable: record[4],
-			Value:    record[5],
-			Unit:     record[6],
-		}
-		surveys = append(surveys, survey)
-	}
-	log.Printf("count of surveys: %d\n", len(surveys))
+	models.CreateSurveys(records)
 }
