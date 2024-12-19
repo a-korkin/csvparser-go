@@ -35,8 +35,14 @@ func writeToFile(rw *bufio.ReadWriter) {
 
 func PrepareDir(fileName string) string {
 	dirName := os.Getenv("DIR_NAME")
-	if err := os.Mkdir(dirName, os.ModePerm); err != nil {
-		log.Fatalf("failed to create directory: %s", err)
+	fileInfo, err := os.Stat(dirName)
+	if err != nil {
+		log.Printf("directory not found: %s", dirName)
+	}
+	if fileInfo == nil {
+		if err := os.Mkdir(dirName, os.ModePerm); err != nil {
+			log.Fatalf("failed to create directory: %s", err)
+		}
 	}
 	return filepath.Join(dirName, fileName)
 }
