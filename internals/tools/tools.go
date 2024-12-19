@@ -8,7 +8,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"path/filepath"
 )
 
 func writeToFile(rw *bufio.ReadWriter) {
@@ -32,7 +31,7 @@ func writeToFile(rw *bufio.ReadWriter) {
 	}
 }
 
-func PrepareDir(fileName string) string {
+func PrepareDir() string {
 	dirName := os.Getenv("DIR_NAME")
 	fileInfo, err := os.Stat(dirName)
 	if err != nil {
@@ -43,10 +42,10 @@ func PrepareDir(fileName string) string {
 			log.Fatalf("failed to create directory: %s", err)
 		}
 	}
-	return filepath.Join(dirName, fileName)
+	return dirName
 }
 
-func DownloadFile(uri string, fileName string) {
+func DownloadFile(uri, fileName string) {
 	resp, err := http.Get(uri)
 	if err != nil {
 		log.Fatalf("failed to load file: %s", err)
